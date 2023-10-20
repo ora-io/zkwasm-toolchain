@@ -163,22 +163,34 @@ async function instantiate(module, imports = {}) {
 //     {},
 //   ))(new URL("../../build/zkgraph_full.wasm", import.meta.url));
 
-export const instantiateWasm = async (wasmpath, basedir) => {
 
-  let url = new URL(wasmpath, basedir);
-  return instantiate(
-    await (async () => {
-      // try {
-      //   return await globalThis.WebAssembly.compileStreaming(
-      //     globalThis.fetch(url),
-      //   );
-      // }
-      // catch {
+// export const instantiateWasm = async (wasmpath, basedir) => {
+
+//     let url = new URL(wasmpath, basedir);
+//     return instantiate(
+//       await (async () => {
+//         // try {
+//         //   return await globalThis.WebAssembly.compileStreaming(
+//         //     globalThis.fetch(url),
+//         //   );
+//         // }
+//         // catch {
+//           return globalThis.WebAssembly.compile(
+//             await (await import("node:fs/promises")).readFile(url),
+//           );
+//         // }
+//       })(),
+//       {},
+//     );
+//   };
+
+export const instantiateWasm = async (wasmUnit8Array) => {
+    return instantiate(
+      await (async () => {
         return globalThis.WebAssembly.compile(
-          await (await import("node:fs/promises")).readFile(url),
-        );
-      // }
-    })(),
-    {},
-  );
-};
+          wasmUnit8Array.buffer,
+        )
+      })(),
+      {},
+    )
+  }
