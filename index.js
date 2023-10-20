@@ -1,0 +1,1 @@
+export { Mock } from "./zkwasm_mock/mock";
