@@ -20,8 +20,12 @@ export class Mock {
 
         // let [privateInputStr, publicInputStr] = await proveInputGen(yamlPath, rpcUrl, blockid, expectedStateStr, isLocal, enableLog)
         const simulator = new Simulator();
-        simulator.set_private_input(privateInputStr);
-        simulator.set_public_input(publicInputStr);
+        if (privateInputStr != null) {
+            simulator.set_private_input(privateInputStr);
+        }
+        if (privateInputStr != null) {
+            simulator.set_public_input(publicInputStr);
+        }
         setupZKWasmSimulator(simulator);
         
         const { zkmain } = await instantiateWasm(wasmUint8Array).catch((error) => {
