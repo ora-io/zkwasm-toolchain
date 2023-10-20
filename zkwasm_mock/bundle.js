@@ -1,9 +1,9 @@
-import { ZKWASMMock } from "./zkwasm_mock.js";
+import { Simulator } from "./simulator.js";
 
-let zkwasmmock = "";
+let zkwasmSimulator = "";
 
-export function setupZKWasmMock(mock) {
-  zkwasmmock = mock;
+export function setupZKWasmSimulator(simulator) {
+  zkwasmSimulator = simulator;
 }
 
 async function instantiate(module, imports = {}) {
@@ -16,11 +16,11 @@ async function instantiate(module, imports = {}) {
       },
       require(x) {
         // sdk/zkwasm/require1(i32) => i64
-        ZKWASMMock.require(x);
+        Simulator.require(x);
       },
       wasm_input(x) {
         // lib/common/zkwasm/wasm_input(i32) => i64
-        return zkwasmmock.wasm_input(x) || 0n;
+        return zkwasmSimulator.wasm_input(x) || 0n;
       },
       js_log(arg) {
         // to compatible with c-wasm

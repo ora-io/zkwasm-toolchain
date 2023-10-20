@@ -60,7 +60,7 @@ export class HostMemory {
   }
 }
 
-export class ZKWASMMock {
+export class Simulator {
   constructor(max_pri_size = 100000000, max_pub_size = 1000) {
     this.privateMem = new HostMemory(max_pri_size);
     this.publicMem = new HostMemory(max_pub_size);
@@ -85,6 +85,6 @@ export class ZKWASMMock {
   wasm_input(a) {
     if (a == 0) return this.privateMem.read_i64();
     else if (a == 1) return this.publicMem.read_i64();
-    else throw Error("zkwasm mock: wasm_input is invalid: ", a);
+    else throw Error("zkwasm simulator: wasm_input is invalid: ", a);
   }
 }
