@@ -2,7 +2,8 @@
   "name": "zkwasm-toolchain",
   "version": "0.0.1",
   "scripts": {
-    "release": ""
+    "release": "",
+    "test": "node tests/mock/test_simulate.js && node tests/mock/test_simulateWithPath.js"
   },
   "type": "module",
   "dependencies": {
