@@ -1,1 +1,2 @@
-export { Mock } from "./zkwasm_mock/mock.js";
+export { Mock } from "./zkwasmmock/mock.js";
+export { WasmBenchmark } from "./wasmbenchmark/benchmark.js";
