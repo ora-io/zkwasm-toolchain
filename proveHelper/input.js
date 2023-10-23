@@ -41,11 +41,11 @@ export class Input{
         this.inputStr[isPublic ? Input.publicId : Input.privateId] += this.formatIntInput(input)
     }
 
-    addHexStringInput(input, isPublic) {
+    addHexString(input, isPublic) {
         this.inputStr[isPublic ? Input.publicId : Input.privateId] += this.formatHexStringInput(input)
     }
 
-    addVarLenInput(input, isPublic) {
+    addVarLenHexString(input, isPublic) {
         this.inputStr[isPublic ? Input.publicId : Input.privateId] += this.formatVarLenInput(input)
     }
 

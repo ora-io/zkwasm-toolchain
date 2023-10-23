@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "scripts": {
     "release": "",
-    "test": "node tests/mock/test_simulate.js && node tests/mock/test_simulateWithPath.js"
+    "test": "node tests/mock/test_simulate.js && node tests/mock/test_simulateWithPath.js",
+    "test-provehelper": "node tests/provehelper/test_input.js"
   },
   "type": "module",
   "dependencies": {
