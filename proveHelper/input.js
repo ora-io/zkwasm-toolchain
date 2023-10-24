@@ -49,6 +49,14 @@ export class Input{
         this.inputStr[isPublic ? Input.publicId : Input.privateId] += this.formatVarLenInput(input)
     }
 
+    // ['0xaa', '0xbbbb', '0xcccccc']
+    addVarLenHexStringArray(input, isPublic) {
+        this.inputStr[isPublic ? Input.publicId : Input.privateId] += this.formatIntInput(input.length)
+        for (let i = 0; i < input.length; i ++){
+            this.inputStr[isPublic ? Input.publicId : Input.privateId] += this.formatVarLenInput(input[i])
+        }
+    }
+
 // // Format inputs with length and input value
 // export function formatIntInput(input) {
 //     return ;
