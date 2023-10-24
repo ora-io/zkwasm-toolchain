@@ -1,7 +1,7 @@
 import { execSync } from "child_process";
 export class Compiler{
-    static assembleCompileCommand(entryPath, wasmPath, abortPath, watPath, memoryBase){
-        let command = `npx asc ${entryPath} -o ${wasmPath} --use abort=${abortPath} -O --noAssert --disable bulk-memory --exportRuntime --runtime stub`
+    static assembleCompileCommand(entryPath, wasmPath, abortPath, watPath, memoryBase, other){
+        let command = `npx asc ${entryPath} -o ${wasmPath} --use abort=${abortPath} -O --noAssert --disable bulk-memory --exportRuntime --runtime stub ${other}`
         if (watPath != null) {
             command += ` -t ${watPath}`
         }
@@ -10,9 +10,9 @@ export class Compiler{
         }
         return command
     }
-    static compile(entryPath, wasmPath, abortPath, watPath=null, memoryBase=null){
+    static compile(entryPath, wasmPath, abortPath, watPath=null, memoryBase=null, other=''){
         const commands = [
-            this.assembleCompileCommand(entryPath, wasmPath, abortPath, watPath, memoryBase), // note: need --exportRuntime or --bindings esm; (--target release)
+            this.assembleCompileCommand(entryPath, wasmPath, abortPath, watPath, memoryBase, other), // note: need --exportRuntime or --bindings esm; (--target release)
           ];
           const combinedCommand = commands.join(" && ");
           execSync(combinedCommand, { encoding: "utf-8" });
