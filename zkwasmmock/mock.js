@@ -16,7 +16,7 @@ export class Mock {
         return this.dryrun(wasmUint8Array, privateInputStr, publicInputStr)
     }
 
-    static async dryrun(wasmUint8Array, privateInputStr, publicInputStr) {
+    static async dryrun(wasmUint8Array, privateInputStr, publicInputStr, contextInputStr) {
 
         // let [privateInputStr, publicInputStr] = await proveInputGen(yamlPath, rpcUrl, blockid, expectedStateStr, isLocal, enableLog)
         const simulator = new Simulator();
@@ -25,6 +25,9 @@ export class Mock {
         }
         if (privateInputStr != null) {
             simulator.set_public_input(publicInputStr);
+        }
+        if (contextInputStr != null) {
+            simulator.set_context_input(contextInputStr);
         }
         setupZKWasmSimulator(simulator);
         

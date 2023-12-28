@@ -64,6 +64,7 @@ export class Simulator {
   constructor(max_pri_size = 100000000, max_pub_size = 1000) {
     this.privateMem = new HostMemory(max_pri_size);
     this.publicMem = new HostMemory(max_pub_size);
+    this.contextMem = new HostMemory(max_pri_size);
   }
 
   set_private_input(str) {
@@ -72,6 +73,10 @@ export class Simulator {
 
   set_public_input(str) {
     this.publicMem.write_from_input(str);
+  }
+
+  set_context_input(str) {
+    this.contextMem.write_from_input(str);
   }
 
   static require(a) {
@@ -86,5 +91,9 @@ export class Simulator {
     if (a == 0) return this.privateMem.read_i64();
     else if (a == 1) return this.publicMem.read_i64();
     else throw Error("zkwasm simulator: wasm_input is invalid: ", a);
+  }
+
+  wasm_read_context() {
+    return this.contextMem.read_i64();
   }
 }
