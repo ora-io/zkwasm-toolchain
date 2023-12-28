@@ -23,12 +23,12 @@ async function instantiate(module, imports = {}) {
         // lib/common/zkwasm/wasm_input(i32) => i64
         return zkwasmSimulator.wasm_input(x) || 0n;
       },
-      // wasm_write_context(arg) {
-      //   console.log('wasm write context: ' + swapEndian(BigInt.asUintN(64, arg).toString(16)));
-      // },
-      // wasm_read_context() {
-      //   return zkwasmSimulator.wasm_read_context() || 0n;
-      // },
+      wasm_write_context(arg) {
+        console.log('wasm write context: ' + swapEndian(BigInt.asUintN(64, arg).toString(16)));
+      },
+      wasm_read_context() {
+        return zkwasmSimulator.wasm_read_context() || 0n;
+      },
       js_log(arg) {
         // to compatible with c-wasm
         console.log(arg);
