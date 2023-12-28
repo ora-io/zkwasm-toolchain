@@ -40,3 +40,11 @@ export function concatHexStrings(hexStrings) {
   }
   return "0x" + result;
 }
+
+export function swapEndian(hexStr) {
+  if (hexStr.length % 2 !== 0) {
+      hexStr = '0' + hexStr;
+  }
+  const bytes = hexStr.match(/.{1,2}/g).reverse();
+  return bytes.join('');
+}

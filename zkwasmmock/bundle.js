@@ -1,4 +1,5 @@
 import { Simulator } from "./simulator.js";
+import { swapEndian } from "./utils.js";
 
 let zkwasmSimulator = "";
 
@@ -22,30 +23,36 @@ async function instantiate(module, imports = {}) {
         // lib/common/zkwasm/wasm_input(i32) => i64
         return zkwasmSimulator.wasm_input(x) || 0n;
       },
+      // wasm_write_context(arg) {
+      //   console.log('wasm write context: ' + swapEndian(BigInt.asUintN(64, arg).toString(16)));
+      // },
+      // wasm_read_context() {
+      //   return zkwasmSimulator.wasm_read_context() || 0n;
+      // },
       js_log(arg) {
         // to compatible with c-wasm
         console.log(arg);
       },
       js_log_u64(arg) {
         // to compatible with c-wasm
-        console.log(arg);
+        console.log(BigInt.asUintN(64, arg));
       },
-    //   printDec(arg) {
-    //     process.stdout.write(arg);
-    //   },
-    //   printHex(arg) {
-    //     process.stdout.write(arg.toString(16));
-    //   },
-    //   printSp() {
-    //     process.stdout.write(' ');
-    //   },
-    //   printLn() {
-    //     console.log();
-    //   },
-    //   c_log(arg) {
-    //     // to compatible with c-wasm
-    //     console.log('c_log: ', arg);
-    //   },
+      // printDec(arg) {
+      //   process.stdout.write(arg);
+      // },
+      // printHex(arg) {
+      //   process.stdout.write(arg.toString(16).padStart(2, '0'));
+      // },
+      // printSp() {
+      //   process.stdout.write(' ');
+      // },
+      // printLn() {
+      //   console.log();
+      // },
+      // c_log(arg) {
+      //   // to compatible with c-wasm
+      //   console.log('c_log: ', arg);
+      // },
     }),
   };
   const { exports } = await WebAssembly.instantiate(module, adaptedImports);
