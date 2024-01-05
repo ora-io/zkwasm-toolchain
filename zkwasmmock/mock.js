@@ -6,14 +6,14 @@ import path from 'node:path'
 
 export class Mock {
     
-    static async dryrunWithPath(wasmPathFromProjRoot, privateInputStr, publicInputStr) {
+    static async dryrunWithPath(wasmPathFromProjRoot, privateInputStr, publicInputStr, contextInputStr) {
 
         const projectRoot = process.cwd()
         const wasmPath = path.join(projectRoot, wasmPathFromProjRoot)
         const wasm = fs.readFileSync(wasmPath)
         const wasmUint8Array = new Uint8Array(wasm)
 
-        return this.dryrun(wasmUint8Array, privateInputStr, publicInputStr)
+        return this.dryrun(wasmUint8Array, privateInputStr, publicInputStr, contextInputStr)
     }
 
     static async dryrun(wasmUint8Array, privateInputStr, publicInputStr, contextInputStr) {
