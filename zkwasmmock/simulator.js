@@ -1,7 +1,7 @@
 import { fromHexString, toHexString } from "./utils.js";
 import { ZKWasmRequireFailed } from "./error.js";
 export class HostMemory {
-  constructor(max_size) {
+constructor(max_size) {
     this.mem = new Uint8Array(max_size);
     this.writecur = 0;
     this.readcur = 0;
@@ -61,7 +61,7 @@ export class HostMemory {
 }
 
 export class Simulator {
-  constructor(max_pri_size = 100000000, max_pub_size = 1000) {
+  constructor(max_pri_size = 100000000, max_pub_size = 2000) {
     this.privateMem = new HostMemory(max_pri_size);
     this.publicMem = new HostMemory(max_pub_size);
     this.contextMem = new HostMemory(max_pri_size);
