@@ -41,16 +41,24 @@ const commonConfig = {
 const outputs = env => [{
   dir: 'dist',
   format: 'esm',
-  entryFileNames: `[name].mjs`,
+  entryFileNames: `[name]${env ? `.${env}` : ''}.mjs`,
 }, {
   dir: 'dist',
   format: 'cjs',
-  entryFileNames: `[name].cjs`,
+  entryFileNames: `[name]${env ? `.${env}` : ''}.cjs`,
 }]
 
 export default () => defineConfig([
   {
     ...commonConfig,
+    output: outputs(),
+    plugins: [
+      ...nodePlugins,
+    ],
+  },
+  {
+    ...commonConfig,
+    input: './index.lib.js',
     output: outputs(),
     plugins: [
       ...nodePlugins,
