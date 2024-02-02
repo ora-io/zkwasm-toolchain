@@ -24,7 +24,7 @@ async function instantiate(module, imports = {}) {
         return zkwasmSimulator.wasm_input(x) || 0n;
       },
       wasm_write_context(arg) {
-        console.log('wasm write context: ' + swapEndian(BigInt.asUintN(64, arg).toString(16)));
+        //pass
       },
       wasm_read_context() {
         return zkwasmSimulator.wasm_read_context() || 0n;
