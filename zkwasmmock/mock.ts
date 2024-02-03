@@ -1,17 +1,23 @@
 import { ZKWasmRequireFailed } from "./error.js";
 import { instantiateWasm, setupZKWasmSimulator } from "./bundle.js";
 import { Simulator } from "./simulator.js";
-import fs from 'node:fs';
-import path from 'node:path';
+import fs from 'node:fs'
+import path from 'node:path'
+
 export class Mock {
-    static async dryrunWithPath(wasmPathFromProjRoot, privateInputStr, publicInputStr, contextInputStr) {
-        const projectRoot = process.cwd();
-        const wasmPath = path.join(projectRoot, wasmPathFromProjRoot);
-        const wasm = fs.readFileSync(wasmPath);
-        const wasmUint8Array = new Uint8Array(wasm);
-        return this.dryrun(wasmUint8Array, privateInputStr, publicInputStr, contextInputStr);
+    
+    static async dryrunWithPath(wasmPathFromProjRoot: string, privateInputStr: string, publicInputStr: string, contextInputStr: string) {
+
+        const projectRoot = process.cwd()
+        const wasmPath = path.join(projectRoot, wasmPathFromProjRoot)
+        const wasm = fs.readFileSync(wasmPath)
+        const wasmUint8Array = new Uint8Array(wasm)
+
+        return this.dryrun(wasmUint8Array, privateInputStr, publicInputStr, contextInputStr)
     }
-    static async dryrun(wasmUint8Array, privateInputStr, publicInputStr, contextInputStr) {
+
+    static async dryrun(wasmUint8Array: Uint8Array, privateInputStr: string, publicInputStr: string, contextInputStr: string) {
+
         // let [privateInputStr, publicInputStr] = await proveInputGen(yamlPath, rpcUrl, blockid, expectedStateStr, isLocal, enableLog)
         const simulator = new Simulator();
         if (privateInputStr != null) {
@@ -24,21 +30,25 @@ export class Mock {
             simulator.set_context_input(contextInputStr);
         }
         setupZKWasmSimulator(simulator);
+        
         const { zkmain } = await instantiateWasm(wasmUint8Array).catch((error) => {
-            throw error;
+            throw error
         });
+
         try {
             zkmain();
-        }
-        catch (e) {
-            if (e instanceof ZKWasmRequireFailed) {
-                return false;
+        } catch (e){
+            if (e instanceof ZKWasmRequireFailed){
+                return false
             }
-            throw e;
+            throw e
         }
+
         // if (enableLog){
         //     console.log("[+] ZKWASM MOCK EXECUTION SUCCESS!", "\n");
         // }
-        return true;
+
+        return true
     }
+
 }

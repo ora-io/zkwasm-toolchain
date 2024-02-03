@@ -1,1 +1,1 @@
-export * from './benchmark'
+export * from './benchmark';

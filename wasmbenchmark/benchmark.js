@@ -1,26 +1,23 @@
-import fs from 'node:fs'
-import path from 'node:path'
-
+import fs from 'node:fs';
+import path from 'node:path';
 export class WasmBenchmark {
     static watLoc(watContent) {
-        return watContent.split("\n").length
+        return watContent.split("\n").length;
     }
     static watLocByPath(watPathFromProjRoot) {
-        const projectRoot = process.cwd()
-        const watPath = path.join(projectRoot, watPathFromProjRoot)
-
+        const projectRoot = process.cwd();
+        const watPath = path.join(projectRoot, watPathFromProjRoot);
         const watContent = fs.readFileSync(watPath, "utf-8");
-        return this.watLoc(watContent)
+        return this.watLoc(watContent);
     }
     static wasmSize(wasmUint8Array) {
-        return wasmUint8Array.length
+        return wasmUint8Array.length;
     }
     static wasmSizeByPath(wasmPathFromProjRoot) {
-        const projectRoot = process.cwd()
-        const wasmPath = path.join(projectRoot, wasmPathFromProjRoot)
-        const wasm = fs.readFileSync(wasmPath)
-        const wasmUint8Array = new Uint8Array(wasm)
-        
-        return this.wasmSize(wasmUint8Array)
+        const projectRoot = process.cwd();
+        const wasmPath = path.join(projectRoot, wasmPathFromProjRoot);
+        const wasm = fs.readFileSync(wasmPath);
+        const wasmUint8Array = new Uint8Array(wasm);
+        return this.wasmSize(wasmUint8Array);
     }
 }
