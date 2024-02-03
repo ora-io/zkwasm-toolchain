@@ -11,5 +11,6 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true
   },
-  "exclude": ["dist", "test/fixtures/**/*"]
+  "exclude": ["dist", "./**/*.ts"],
+  "include": ["rollup.config.js"]
 }
