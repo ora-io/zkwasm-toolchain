@@ -5,8 +5,8 @@
     "build": "rollup -c --bundleConfigAsCjs",
     "prepublishOnly": "npm run build",
     "release": "npm publish --access public",
-    "test": "node tests/mock/test_simulate.js && node tests/mock/test_simulateWithPath.js",
-    "test-provehelper": "node tests/provehelper/test_input.js"
+    "test": "npx tsx tests/mock/test_simulate.ts && npx tsx tests/mock/test_simulateWithPath.ts",
+    "test-provehelper": "npx tsx tests/provehelper/test_input.ts"
   },
   "type": "module",
   "exports": {

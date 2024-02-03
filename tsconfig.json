@@ -11,5 +11,6 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true
   },
+  "include": ["**/*.ts"],
   "exclude": ["dist"]
 }
