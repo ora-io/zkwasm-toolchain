@@ -8,6 +8,7 @@ import json from '@rollup/plugin-json'
 import { defineConfig } from 'rollup'
 
 const input = path.join(__dirname, './index.ts')
+const libInput = path.join(__dirname, './index.lib.ts')
 
 const external = [
   ...builtinModules,
@@ -25,10 +26,7 @@ const plugins = [
 const nodePlugins = [
   ...plugins,
   esbuild.default({
-    target: 'node14',
-    define: {
-      __BROWSER__: 'false',
-    },
+    target: 'node14'
   }),
 ]
 
@@ -59,7 +57,7 @@ export default () => defineConfig([
   },
   {
     ...commonConfig,
-    input: './index.lib.ts',
+    input: libInput,
     output: outputs(),
     plugins: [
       ...nodePlugins,
@@ -78,10 +76,10 @@ export default () => defineConfig([
     ],
   },
   {
-    input,
+    input: libInput,
     output: {
       dir: 'dist',
-      entryFileNames: '[name].lib.d.ts',
+      entryFileNames: '[name].d.ts',
       format: 'esm',
     },
     external,
@@ -89,9 +87,6 @@ export default () => defineConfig([
     plugins: [
       esbuild.default({
         target: 'node14',
-        define: {
-          __BROWSER__: 'true',
-        },
       }),
       dts({ respectExternal: true }),
     ],
