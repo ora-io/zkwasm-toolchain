@@ -11,16 +11,30 @@
   "type": "module",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "require": "./dist/index.cjs",
       "import": "./dist/index.mjs"
     },
     "./lib": {
+      "types": "./dist/index.lib.d.ts",
       "require": "./dist/index.lib.cjs",
       "import": "./dist/index.lib.mjs"
     }
   },
   "main": "./dist/index.mjs",
   "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/*",
+        "./dist/index.d.ts"
+      ],
+      "lib": [
+        "./dist/index.lib.d.ts"
+      ]
+    }
+  },
   "files": [
     "dist"
   ],
@@ -32,6 +46,7 @@
     "@types/node": "^20.11.6",
     "rollup": "^4.9.6",
     "rollup-plugin-esbuild": "^6.1.1",
+    "rollup-plugin-dts": "^6.0.2",
     "ts-node": "^10.9.1",
     "typescript": "^5.1.6"
   }
