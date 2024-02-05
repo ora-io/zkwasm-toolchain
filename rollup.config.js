@@ -6,7 +6,7 @@ import commonjs from '@rollup/plugin-commonjs'
 import json from '@rollup/plugin-json'
 import { defineConfig } from 'rollup'
 
-const input = path.join(__dirname, './index.js')
+const input = path.join(__dirname, './index.ts')
 
 const external = [
   ...builtinModules,
@@ -58,7 +58,7 @@ export default () => defineConfig([
   },
   {
     ...commonConfig,
-    input: './index.lib.js',
+    input: './index.lib.ts',
     output: outputs(),
     plugins: [
       ...nodePlugins,

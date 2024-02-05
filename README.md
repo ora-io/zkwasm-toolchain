@@ -2,5 +2,5 @@
 ## Simulator
 ```bash
 npm install
-node tests/mock/test_simulate.js
+npx tsx tests/mock/test_simulate.ts
 ```

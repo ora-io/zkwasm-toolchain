@@ -6,7 +6,7 @@ import path from 'node:path'
 
 export class Mock {
     
-    static async dryrunWithPath(wasmPathFromProjRoot, privateInputStr, publicInputStr, contextInputStr) {
+    static async dryrunWithPath(wasmPathFromProjRoot: string, privateInputStr: string, publicInputStr: string, contextInputStr: string) {
 
         const projectRoot = process.cwd()
         const wasmPath = path.join(projectRoot, wasmPathFromProjRoot)
@@ -16,7 +16,7 @@ export class Mock {
         return this.dryrun(wasmUint8Array, privateInputStr, publicInputStr, contextInputStr)
     }
 
-    static async dryrun(wasmUint8Array, privateInputStr, publicInputStr, contextInputStr) {
+    static async dryrun(wasmUint8Array: Uint8Array, privateInputStr: string, publicInputStr: string, contextInputStr: string) {
 
         // let [privateInputStr, publicInputStr] = await proveInputGen(yamlPath, rpcUrl, blockid, expectedStateStr, isLocal, enableLog)
         const simulator = new Simulator();

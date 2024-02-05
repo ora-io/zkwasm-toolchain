@@ -1,5 +1,5 @@
 
-function trimPrefix(str, prefix) {
+function trimPrefix(str: string, prefix: string) {
     if (str.startsWith(prefix)) {
         str = str.substring(prefix.length);
     }
@@ -21,15 +21,15 @@ export class Input{
         return this.inputStr[Input.publicId]
     }
 
-    formatIntInput(input) {
+    formatIntInput(input: number) {
         return `0x${input.toString(16)}:i64 `;
     }
 
-    formatHexStringInput(input) {
+    formatHexStringInput(input: string) {
         return `0x${trimPrefix(input, "0x")}:bytes-packed `;
     }
 
-    formatVarLenInput(input) {
+    formatVarLenInput(input: string) {
         var inp = trimPrefix(input, "0x");
         var formatted = `${this.formatIntInput(
             Math.ceil(inp.length / 2),
@@ -37,20 +37,20 @@ export class Input{
         return formatted;
     }
     
-    addInt(input, isPublic){
+    addInt(input: number, isPublic: boolean){
         this.inputStr[isPublic ? Input.publicId : Input.privateId] += this.formatIntInput(input)
     }
 
-    addHexString(input, isPublic) {
+    addHexString(input: string, isPublic: boolean) {
         this.inputStr[isPublic ? Input.publicId : Input.privateId] += this.formatHexStringInput(input)
     }
 
-    addVarLenHexString(input, isPublic) {
+    addVarLenHexString(input: string, isPublic: boolean) {
         this.inputStr[isPublic ? Input.publicId : Input.privateId] += this.formatVarLenInput(input)
     }
 
     // ['0xaa', '0xbbbb', '0xcccccc']
-    addVarLenHexStringArray(input, isPublic) {
+    addVarLenHexStringArray(input: string[], isPublic: boolean) {
         this.inputStr[isPublic ? Input.publicId : Input.privateId] += this.formatIntInput(input.length)
         for (let i = 0; i < input.length; i ++){
             this.inputStr[isPublic ? Input.publicId : Input.privateId] += this.formatVarLenInput(input[i])

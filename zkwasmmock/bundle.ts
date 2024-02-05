@@ -1,39 +1,39 @@
 import { Simulator } from "./simulator.js";
-import { swapEndian } from "./utils.js";
+import { swapEndian } from "./utils";
 
-let zkwasmSimulator = "";
+let zkwasmSimulator: Simulator;
 
-export function setupZKWasmSimulator(simulator) {
+export function setupZKWasmSimulator(simulator: Simulator) {
   zkwasmSimulator = simulator;
 }
 
-async function instantiate(module, imports = {}) {
+async function instantiate(module: WebAssembly.Module, imports: Record<string, any> = {}) {
   const adaptedImports = {
     env: Object.assign(Object.create(globalThis), imports.env || {}, {
-      "console.log"(text) {
+      "console.log"(text?: string | null) {
         // ~lib/bindings/dom/console.log(~lib/string/String) => void
-        text = __liftString(text >>> 0);
+        text = __liftString((text as any) >>> 0);
         console.log(text);
       },
-      require(x) {
+      require(x:0|1) {
         // sdk/zkwasm/require1(i32) => i64
         Simulator.require(x);
       },
-      wasm_input(x) {
+      wasm_input(x:0|1) {
         // lib/common/zkwasm/wasm_input(i32) => i64
-        return zkwasmSimulator.wasm_input(x) || 0n;
+        return zkwasmSimulator?.wasm_input(x) || 0n;
       },
-      wasm_write_context(arg) {
+      wasm_write_context(arg:number) {
         //pass
       },
       wasm_read_context() {
         return zkwasmSimulator.wasm_read_context() || 0n;
       },
-      js_log(arg) {
+      js_log(arg: any) {
         // to compatible with c-wasm
         console.log(arg);
       },
-      js_log_u64(arg) {
+      js_log_u64(arg: any) {
         // to compatible with c-wasm
         console.log(BigInt.asUintN(64, arg));
       },
@@ -55,11 +55,11 @@ async function instantiate(module, imports = {}) {
       // },
     }),
   };
-  const { exports } = await WebAssembly.instantiate(module, adaptedImports);
+  const { exports } = await WebAssembly.instantiate(module, adaptedImports) as any;
   const memory = exports.memory || imports.env.memory;
   const adaptedExports = Object.setPrototypeOf(
     {
-      asmain_local(rawreceipts, matched_event_offsets) {
+      asmain_local(rawreceipts:any, matched_event_offsets:any) {
         // lib/main_local/asmain(~lib/typedarray/Uint8Array, ~lib/typedarray/Uint32Array) => ~lib/typedarray/Uint8Array
         rawreceipts = __retain(
           __lowerTypedArray(Uint8Array, 4, 0, rawreceipts) || __notnull(),
@@ -92,7 +92,7 @@ async function instantiate(module, imports = {}) {
     },
     exports,
   );
-  function __liftString(pointer) {
+  function __liftString(pointer: number) {
     if (!pointer) return null;
     const end =
         (pointer + new Uint32Array(memory.buffer)[(pointer - 4) >>> 2]) >>> 1,
@@ -105,7 +105,7 @@ async function instantiate(module, imports = {}) {
       );
     return string + String.fromCharCode(...memoryU16.subarray(start, end));
   }
-  function __liftTypedArray(constructor, pointer) {
+  function __liftTypedArray(constructor: Uint8ArrayConstructor, pointer: number) {
     if (!pointer) return null;
     return new constructor(
       memory.buffer,
@@ -113,7 +113,7 @@ async function instantiate(module, imports = {}) {
       __dataview.getUint32(pointer + 8, true) / constructor.BYTES_PER_ELEMENT,
     ).slice();
   }
-  function __lowerTypedArray(constructor, id, align, values) {
+  function __lowerTypedArray(constructor: Uint8ArrayConstructor | Uint32ArrayConstructor, id: number, align: number, values: any[] | null) {
     if (values == null) return 0;
     const length = values.length,
       buffer = exports.__pin(exports.__new(length << align, 1)) >>> 0,
@@ -126,7 +126,7 @@ async function instantiate(module, imports = {}) {
     return header;
   }
   const refcounts = new Map();
-  function __retain(pointer) {
+  function __retain(pointer: number | void) {
     if (pointer) {
       const refcount = refcounts.get(pointer);
       if (refcount) refcounts.set(pointer, refcount + 1);
@@ -134,7 +134,7 @@ async function instantiate(module, imports = {}) {
     }
     return pointer;
   }
-  function __release(pointer) {
+  function __release(pointer: any) {
     if (pointer) {
       const refcount = refcounts.get(pointer);
       if (refcount === 1) exports.__unpin(pointer), refcounts.delete(pointer);
@@ -149,7 +149,7 @@ async function instantiate(module, imports = {}) {
     throw TypeError("value must not be null");
   }
   let __dataview = new DataView(memory.buffer);
-  function __setU32(pointer, value) {
+  function __setU32(pointer: number, value: number) {
     try {
       __dataview.setUint32(pointer, value, true);
     } catch {
@@ -157,7 +157,7 @@ async function instantiate(module, imports = {}) {
       __dataview.setUint32(pointer, value, true);
     }
   }
-  function __getU32(pointer) {
+  function __getU32(pointer: number) {
     try {
       return __dataview.getUint32(pointer, true);
     } catch {
@@ -168,7 +168,7 @@ async function instantiate(module, imports = {}) {
   return adaptedExports;
 }
 
-export const instantiateWasm = async (wasmUnit8Array) => {
+export const instantiateWasm = async (wasmUnit8Array: Uint8Array) => {
     return instantiate(
       await (async () => {
         return globalThis.WebAssembly.compile(

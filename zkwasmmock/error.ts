@@ -1,5 +1,5 @@
 export class ZKWasmRequireFailed extends Error{
-    constructor(message) {
+    constructor(message: string | undefined) {
       super(message);
     }
 }
