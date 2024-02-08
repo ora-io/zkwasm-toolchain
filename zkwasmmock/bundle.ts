@@ -31,6 +31,8 @@ async function instantiate(module: WebAssembly.Module, imports: Record<string, a
       },
       wasm_dbg(x: bigint) {
       },
+      wasm_dbg_char(x: number) {
+      },
       wasm_trace_size(): bigint {
         return 0n;
       },
