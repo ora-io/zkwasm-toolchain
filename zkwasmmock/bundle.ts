@@ -29,6 +29,11 @@ async function instantiate(module: WebAssembly.Module, imports: Record<string, a
       wasm_read_context() {
         return zkwasmSimulator.wasm_read_context() || 0n;
       },
+      wasm_dbg(x: bigint) {
+      },
+      wasm_trace_size(): bigint {
+        return 0n;
+      },
       js_log(arg: any) {
         // to compatible with c-wasm
         console.log(arg);
