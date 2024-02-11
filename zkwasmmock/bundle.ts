@@ -6,7 +6,6 @@ let zkwasmSimulator: Simulator;
 export function setupZKWasmSimulator(simulator: Simulator) {
   zkwasmSimulator = simulator;
 }
-
 async function instantiate(module: WebAssembly.Module, imports: Record<string, any> = {}) {
   const adaptedImports = {
     env: Object.assign(Object.create(globalThis), imports.env || {}, {
@@ -30,8 +29,10 @@ async function instantiate(module: WebAssembly.Module, imports: Record<string, a
         return zkwasmSimulator.wasm_read_context() || 0n;
       },
       wasm_dbg(x: bigint) {
+        console.log(x.toString());
       },
-      wasm_dbg_char(x: number) {
+      wasm_dbg_char(x: any) {
+        process.stdout.write(String.fromCharCode(parseInt(x, 10)));
       },
       wasm_trace_size(): bigint {
         return 0n;
