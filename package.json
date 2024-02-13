@@ -1,5 +1,5 @@
 {
-  "name": "@hyperoracle/zkwasm-toolchain",
+  "name": "@ora-io/zkwasm-toolchain",
   "version": "0.0.4",
   "scripts": {
     "build": "rollup -c --bundleConfigAsCjs",
