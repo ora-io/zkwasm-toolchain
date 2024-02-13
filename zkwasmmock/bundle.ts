@@ -93,7 +93,6 @@ async function instantiate(module: WebAssembly.Module, imports: Record<string, a
           )
         }
         catch (e) {
-          console.log('possibly memory access out of bounds, consider increase memory size.')
           throw e;
         }
       },
