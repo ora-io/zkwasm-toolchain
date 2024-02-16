@@ -7,22 +7,32 @@ function trimPrefix(str: string, prefix: string) {
 }
 
 export class Input{
-    inputStr=['',''];
-    
-    static privateId = 0
-    static publicId = 1
+    inputStr = ['', '', '']
+    auxParams = {}
 
+    static PrivateId = 0
+    static PublicId = 1
+    static ContextId = 2
 
-    getPrivateInputStr(){
-        return this.inputStr[Input.privateId]
+    getPrivateInputStr() {
+      return this.inputStr[Input.PrivateId]
     }
 
-    getPublicInputStr(){
-        return this.inputStr[Input.publicId]
+    getPublicInputStr() {
+      return this.inputStr[Input.PublicId]
+    }
+
+    getContextInputStr() {
+      return this.inputStr[Input.ContextId]
     }
 
     formatIntInput(input: number) {
         return `0x${input.toString(16)}:i64 `;
+    }
+
+    // '+': convert boolean to number, for compatible
+    append(input: string, inputChanId: number = 0) {
+      this.inputStr[+inputChanId] += input;
     }
 
     formatHexStringInput(input: string) {
@@ -36,25 +46,24 @@ export class Input{
         )}${this.formatHexStringInput(inp)}`;
         return formatted;
     }
-    
-    addInt(input: number, isPublic: boolean){
-        this.inputStr[isPublic ? Input.publicId : Input.privateId] += this.formatIntInput(input)
+
+    addInt(input: number, inputChanId: number = 0) {
+        this.append(this.formatIntInput(input), inputChanId)
     }
 
-    addHexString(input: string, isPublic: boolean) {
-        this.inputStr[isPublic ? Input.publicId : Input.privateId] += this.formatHexStringInput(input)
+    addHexString(input: string, inputChanId: number = 0) {
+        this.append(this.formatHexStringInput(input), inputChanId)
     }
 
-    addVarLenHexString(input: string, isPublic: boolean) {
-        this.inputStr[isPublic ? Input.publicId : Input.privateId] += this.formatVarLenInput(input)
+    addVarLenHexString(input: string, inputChanId: number = 0) {
+        this.append(this.formatVarLenInput(input), inputChanId)
     }
 
     // ['0xaa', '0xbbbb', '0xcccccc']
-    addVarLenHexStringArray(input: string[], isPublic: boolean) {
-        this.inputStr[isPublic ? Input.publicId : Input.privateId] += this.formatIntInput(input.length)
-        for (let i = 0; i < input.length; i ++){
-            this.inputStr[isPublic ? Input.publicId : Input.privateId] += this.formatVarLenInput(input[i])
-        }
+    addVarLenHexStringArray(input: string, inputChanId: number = 0) {
+        this.append(this.formatIntInput(input.length), inputChanId)
+        for (let i = 0; i < input.length; i++)
+            this.append(this.formatVarLenInput(input[i]), inputChanId)
     }
 
 // // Format inputs with length and input value
