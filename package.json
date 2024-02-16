@@ -1,6 +1,7 @@
 {
   "name": "zkwasm-toolchain",
   "version": "0.0.4",
+  "author": "Norman(nom4dv3), Jincong(murongg), Walter(walterzhu29), Shuxiao(lightmanM), Jingya(enzox0124)",
   "scripts": {
     "build": "rollup -c --bundleConfigAsCjs",
     "prepublishOnly": "npm run build",
