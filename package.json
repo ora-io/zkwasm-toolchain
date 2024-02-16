@@ -1,5 +1,5 @@
 {
-  "name": "@ora-io/zkwasm-toolchain",
+  "name": "zkwasm-toolchain",
   "version": "0.0.4",
   "scripts": {
     "build": "rollup -c --bundleConfigAsCjs",
