@@ -6,14 +6,16 @@ let zkwasmSimulator: Simulator;
 export function setupZKWasmSimulator(simulator: Simulator) {
   zkwasmSimulator = simulator;
 }
+
+export let hasDebugOnlyFunc = false
+
 async function instantiate(module: WebAssembly.Module, imports: Record<string, any> = {}) {
+  hasDebugOnlyFunc = false
   const adaptedImports = {
     env: Object.assign(Object.create(globalThis), imports.env || {}, {
-      "console.log"(text?: string | null) {
-        // ~lib/bindings/dom/console.log(~lib/string/String) => void
-        text = __liftString((text as any) >>> 0);
-        console.log(text);
-      },
+      /**
+       * zkWasm supported built-ins
+       */
       require(x:0|1) {
         // sdk/zkwasm/require1(i32) => i64
         Simulator.require(x);
@@ -37,13 +39,25 @@ async function instantiate(module: WebAssembly.Module, imports: Record<string, a
       wasm_trace_size(): bigint {
         return 0n;
       },
+
+      /**
+       * Non-zkWasm supported debug only hooks
+       */
+      "console.log"(text?: string | null) {
+        // ~lib/bindings/dom/console.log(~lib/string/String) => void
+        text = __liftString((text as any) >>> 0);
+        console.log(text);
+        hasDebugOnlyFunc = true
+      },
       js_log(arg: any) {
-        // to compatible with c-wasm
+        // reserved debug hook
         console.log(arg);
+        hasDebugOnlyFunc = true
       },
       js_log_u64(arg: any) {
-        // to compatible with c-wasm
+        // reserved debug hook
         console.log(BigInt.asUintN(64, arg));
+        hasDebugOnlyFunc = true
       },
       // printDec(arg) {
       //   process.stdout.write(arg);
@@ -67,25 +81,25 @@ async function instantiate(module: WebAssembly.Module, imports: Record<string, a
   const memory = exports.memory || imports.env.memory;
   const adaptedExports = Object.setPrototypeOf(
     {
-      asmain_local(rawreceipts:any, matched_event_offsets:any) {
-        // lib/main_local/asmain(~lib/typedarray/Uint8Array, ~lib/typedarray/Uint32Array) => ~lib/typedarray/Uint8Array
-        rawreceipts = __retain(
-          __lowerTypedArray(Uint8Array, 4, 0, rawreceipts) || __notnull(),
-        );
-        matched_event_offsets =
-          __lowerTypedArray(Uint32Array, 5, 2, matched_event_offsets) ||
-          __notnull();
-        try {
-          return __liftTypedArray(
-            Uint8Array,
-            exports.asmain(rawreceipts, matched_event_offsets) >>> 0,
-          );
-        } finally {
-          __release(rawreceipts);
-        }
-      },
+      // asmain_local(rawreceipts:any, matched_event_offsets:any) {
+      //   // lib/main_local/asmain(~lib/typedarray/Uint8Array, ~lib/typedarray/Uint32Array) => ~lib/typedarray/Uint8Array
+      //   rawreceipts = __retain(
+      //     __lowerTypedArray(Uint8Array, 4, 0, rawreceipts) || __notnull(),
+      //   );
+      //   matched_event_offsets =
+      //     __lowerTypedArray(Uint32Array, 5, 2, matched_event_offsets) ||
+      //     __notnull();
+      //   try {
+      //     return __liftTypedArray(
+      //       Uint8Array,
+      //       exports.asmain(rawreceipts, matched_event_offsets) >>> 0,
+      //     );
+      //   } finally {
+      //     __release(rawreceipts);
+      //   }
+      // },
       asmain() {
-        // dev: always throw for zkgraph debug purpose.
+        // dev: always throw for debug purpose.
         try {
           return __liftTypedArray(
             Uint8Array,
