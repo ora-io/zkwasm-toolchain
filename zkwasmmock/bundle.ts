@@ -43,12 +43,6 @@ async function instantiate(module: WebAssembly.Module, imports: Record<string, a
       /**
        * Non-zkWasm supported debug only hooks
        */
-      "console.log"(text?: string | null) {
-        // ~lib/bindings/dom/console.log(~lib/string/String) => void
-        text = __liftString((text as any) >>> 0);
-        console.log(text);
-        hasDebugOnlyFunc = true
-      },
       js_log(arg: any) {
         // reserved debug hook
         console.log(arg);
@@ -113,19 +107,6 @@ async function instantiate(module: WebAssembly.Module, imports: Record<string, a
     },
     exports,
   );
-  function __liftString(pointer: number) {
-    if (!pointer) return null;
-    const end =
-        (pointer + new Uint32Array(memory.buffer)[(pointer - 4) >>> 2]) >>> 1,
-      memoryU16 = new Uint16Array(memory.buffer);
-    let start = pointer >>> 1,
-      string = "";
-    while (end - start > 1024)
-      string += String.fromCharCode(
-        ...memoryU16.subarray(start, (start += 1024)),
-      );
-    return string + String.fromCharCode(...memoryU16.subarray(start, end));
-  }
   function __liftTypedArray(constructor: Uint8ArrayConstructor, pointer: number) {
     if (!pointer) return null;
     return new constructor(
