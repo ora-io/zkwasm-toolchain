@@ -40,6 +40,13 @@ async function instantiate(module: WebAssembly.Module, imports: Record<string, a
       wasm_trace_size(): bigint {
         return 0n;
       },
+      babyjubjub_sum_new(x: bigint): void {
+      },
+      babyjubjub_sum_push(x: bigint):void {
+      },
+      babyjubjub_sum_finalize(): bigint {
+        return zkwasmSimulator.babyjubjub_sum_finalize();
+      },
 
       /**
        * Non-zkWasm supported debug only hooks

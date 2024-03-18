@@ -1,5 +1,6 @@
 import { fromHexString, toHexString } from "./utils.js";
 import { ZKWasmRequireFailed } from "./error.js";
+import { logger } from "../utils/index.js";
 export class HostMemory {
   mem: Uint8Array
   writecur: number
@@ -62,14 +63,23 @@ constructor(max_size: number) {
   }
 }
 
+export class BabyJubjubSumContext {
+  finalizeIdx: number
+
+  constructor() {
+    this.finalizeIdx = 0;
+  }
+}
 export class Simulator {
   privateMem: HostMemory
   publicMem: HostMemory
   contextMem: HostMemory
+  jubjubContext: BabyJubjubSumContext
   constructor(max_pri_size = 100000000, max_pub_size = 2000) {
     this.privateMem = new HostMemory(max_pri_size);
     this.publicMem = new HostMemory(max_pub_size);
     this.contextMem = new HostMemory(max_pri_size);
+    this.jubjubContext = new BabyJubjubSumContext();
   }
 
   set_private_input(str: string) {
@@ -83,7 +93,18 @@ export class Simulator {
   set_context_input(str: string) {
     this.contextMem.write_from_input(str);
   }
-
+  babyjubjub_sum_finalize(): bigint {
+    this.jubjubContext.finalizeIdx++;
+    // a success verify means y[0] = 1.
+    if (this.jubjubContext.finalizeIdx === 5) {
+      return 1n;
+    }
+    if (this.jubjubContext.finalizeIdx === 8) {
+      this.jubjubContext.finalizeIdx = 0;
+      logger.log("Baby Jubjub signature verification is not supported in exec, skipping...");
+    }
+    return 0n;
+  }
   static require(a: 0|1) {
     if (!a) {
     //   console.log("[-] zkwasm require condition is false");
