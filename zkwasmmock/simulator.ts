@@ -1,5 +1,6 @@
 import { fromHexString, toHexString } from "./utils.js";
 import { ZKWasmRequireFailed } from "./error.js";
+import { logger } from "../utils/index.js";
 export class HostMemory {
   mem: Uint8Array
   writecur: number
@@ -94,11 +95,13 @@ export class Simulator {
   }
   babyjubjub_sum_finalize(): bigint {
     this.jubjubContext.finalizeIdx++;
+    // a success verify means y[0] = 1.
     if (this.jubjubContext.finalizeIdx === 5) {
       return 1n;
     }
     if (this.jubjubContext.finalizeIdx === 8) {
       this.jubjubContext.finalizeIdx = 0;
+      logger.log("Baby Jubjub signature verification is not supported in exec, skipping...");
     }
     return 0n;
   }
