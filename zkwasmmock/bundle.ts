@@ -45,7 +45,7 @@ async function instantiate(module: WebAssembly.Module, imports: Record<string, a
       babyjubjub_sum_push(x: bigint):void {
       },
       babyjubjub_sum_finalize(): bigint {
-        return 0n;
+        return zkwasmSimulator.babyjubjub_sum_finalize();
       },
 
       /**
