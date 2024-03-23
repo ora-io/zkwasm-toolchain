@@ -5,6 +5,12 @@ function trimPrefix(str: string, prefix: string) {
     }
     return str;
 }
+function padToEven(hexString: string, isPrefix: boolean = true) {
+    if (hexString.length % 2 !== 0) {
+        hexString = isPrefix ? '0' + hexString : hexString + '0';
+    }
+    return hexString
+}
 
 export class Input{
     inputStr = ['', '', '']
@@ -36,7 +42,7 @@ export class Input{
     }
 
     formatHexStringInput(input: string) {
-        return `0x${trimPrefix(input, "0x")}:bytes-packed `;
+        return `0x${padToEven(trimPrefix(input, "0x"))}:bytes-packed `;
     }
 
     formatVarLenInput(input: string) {
